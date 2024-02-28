@@ -1,6 +1,6 @@
 <template>
   <div class="contain">
-    <a-table :columns="columns" :data-source="data">
+    <a-table :columns="columns" :data-source="props.tableData">
       <template #headerCell="{ column }">
         <template v-if="column.key === 'name'"> </template>
       </template>
@@ -36,6 +36,13 @@
   </div>
 </template>
 <script lang="ts" setup>
+const props = defineProps({
+  tableData: {
+    type: Array
+  }
+})
+console.log('%c Line:40 🌶 props', 'color:#42b983', props.tableData)
+
 const columns = [
   {
     title: 'id',
@@ -43,29 +50,24 @@ const columns = [
     key: 'id'
   },
   {
-    title: '名称',
-    dataIndex: 'name',
-    key: 'name'
+    title: '机器人信息',
+    dataIndex: 'bot_info',
+    key: 'bot_info'
   },
   {
-    title: '形象集合',
-    dataIndex: 'group',
-    key: 'group'
+    title: '机器人名称',
+    dataIndex: 'bot_name',
+    key: 'bot_name'
   },
   {
-    title: '人物设定',
-    key: 'character',
-    dataIndex: 'character'
+    title: '用户设定',
+    key: 'user_info',
+    dataIndex: 'user_info'
   },
   {
-    title: '上线时间',
-    key: 'upTime',
-    dataIndex: 'upTime'
-  },
-  {
-    title: '更新时间',
-    key: 'updateTime',
-    dataIndex: 'updateTime'
+    title: '用户名称',
+    key: 'user_name',
+    dataIndex: 'user_name'
   },
   {
     title: 'Action',
@@ -73,44 +75,36 @@ const columns = [
   }
 ]
 
-const data = [
-  {
-    id: '1',
-    name: 'John Brown',
-    group: 32,
-    character: '小武',
-    upTime: '3333',
-    updateTime: '44444',
-    tags: ['上线']
-  },
-  {
-    id: '1',
-    name: 'John Brown',
-    group: 32,
-    character: '小武',
-    upTime: '3333',
-    updateTime: '44444',
-    tags: ['上线']
-  },
-  {
-    id: '1',
-    name: 'John Brown',
-    group: 32,
-    character: '小武',
-    upTime: '3333',
-    updateTime: '44444',
-    tags: ['上线']
-  },
-  {
-    id: '1',
-    name: 'John Brown',
-    group: 32,
-    character: '小武',
-    upTime: '3333',
-    updateTime: '44444',
-    tags: ['下线']
-  }
-]
+// const data = [
+//   {
+//     id: '1',
+//     bot_info: '修仙界的大能，寡言少语，为人精明，待人友善',
+//     bot_name: '韩立',
+//     user_info: '曲魂是韩立年轻时候的师兄',
+//     user_name: '曲魂'
+//   },
+//   {
+//     id: '1',
+//     bot_info: '修仙界的大能，寡言少语，为人精明，待人友善',
+//     bot_name: '韩立',
+//     user_info: '曲魂是韩立年轻时候的师兄',
+//     user_name: '曲魂'
+//   },
+//   {
+//     id: '1',
+//     bot_info: '修仙界的大能，寡言少语，为人精明，待人友善',
+//     bot_name: '韩立',
+//     user_info: '曲魂是韩立年轻时候的师兄',
+//     user_name: '曲魂'
+//   },
+//   {
+//     id: '1',
+//     bot_info: '修仙界的大能，寡言少语，为人精明，待人友善',
+//     bot_name: '韩立',
+//     user_info: '曲魂是韩立年轻时候的师兄',
+//     user_name: '曲魂'
+//   }
+// ]
 </script>
 <style scoped>
 .contain {

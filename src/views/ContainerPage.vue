@@ -9,7 +9,7 @@
   >
     <a-form>
       <a-form-item v-for="item in items" :label="item.name" :key="item.name">
-        <a-input :placeholder="item.placeHolder"></a-input>
+        <a-input :placeholder="item.placeHolder" v-model:value="modalForm[item.name]"></a-input>
       </a-form-item>
     </a-form>
   </a-modal>
@@ -31,17 +31,20 @@
             <a-button type="primary" html-type="submit" class="button-style" @click="addClick">
               新增
             </a-button>
-            <a-button type="primary" html-type="submit" class="button-style"> 查询 </a-button>
+            <a-button type="primary" html-type="submit" class="button-style" @click="fetchData">
+              查询
+            </a-button>
             <a-button type="primary" html-type="submit" class="button-style"> 重置 </a-button>
           </a-form-item>
         </a-col>
       </a-row>
     </a-form>
-    <InteTable />
+    <InteTable :tableData="tableData" />
   </div>
 </template>
 <script lang="ts" setup>
-import { reactive, ref } from 'vue'
+import { agentSearch, agentAdd } from '../utils/api'
+import { onMounted, reactive, ref } from 'vue'
 import type { UnwrapRef } from 'vue'
 import type { FormProps } from 'ant-design-vue'
 import InteTable from '../components/table/InteTable.vue'
@@ -52,6 +55,13 @@ interface FormState {
 const formState: UnwrapRef<FormState> = reactive({
   id: '',
   name: ''
+})
+const tableData = ref([])
+const modalForm = reactive({
+  bot_info: '1111',
+  bot_name: '222',
+  user_info: '',
+  user_name: ''
 })
 const items = [
   { name: 'bot_info', placeHolder: 'bot_info' },
@@ -65,10 +75,18 @@ const addClick = () => {
   open.value = true
 }
 
-const handleOk = (e: MouseEvent) => {
-  console.log(e)
+const handleOk = async (e: MouseEvent) => {
+  const okAdd = await agentAdd(modalForm)
+
   open.value = false
 }
+const fetchData = async () => {
+  const res = await agentSearch({ bot_name: formState.name, _id: formState.id })
+  tableData.value = res.data.aiList
+}
+onMounted(async () => {
+  fetchData()
+})
 </script>
 <style scoped>
 .container {
