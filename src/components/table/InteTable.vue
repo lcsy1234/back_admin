@@ -28,19 +28,19 @@
             <a-divider type="vertical" />
             <a @click="deleteClick(record.uuid)">删除</a>
             <a-divider type="vertical" />
-            <a class="ant-dropdown-link"> 对话测试 </a>
+            <a class="ant-dropdown-link"> 上传头像 </a>
           </span>
         </template>
       </template>
     </a-table>
-    <AddModal v-model:open="openModel" :modal-edit="modalEdit" />
   </div>
 </template>
 <script lang="ts" setup>
 import { agentDelete } from '../../utils/api'
 import { defineEmits, ref } from 'vue'
-import AddModal from '../modal/AddModal.vue'
-const emit = defineEmits(['updateTableData'])
+const emit = defineEmits(['fetTableData'])
+const modalEdit = defineModel('modalEdit')
+const openModal = defineModel('openModal')
 const props = defineProps({
   tableData: {
     type: Array
@@ -48,14 +48,6 @@ const props = defineProps({
   loading: {
     type: Boolean
   }
-})
-const openModel = ref<boolean>(false)
-const modalEdit = ref({
-  uuid: '',
-  bot_info: '',
-  bot_name: '',
-  user_info: '',
-  user_name: ''
 })
 
 const columns = [
@@ -91,11 +83,11 @@ const columns = [
 ]
 const deleteClick = async (uuid: string) => {
   await agentDelete({ uuid: uuid })
-  emit('updateTableData')
+  emit('fetTableData')
 }
 const editClick = async (record: any) => {
   modalEdit.value = record
-  openModel.value = true
+  openModal.value = true
 }
 </script>
 <style scoped>

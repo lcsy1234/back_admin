@@ -18,20 +18,22 @@
 import { ref, watch } from 'vue'
 import { agentAdd, agentEdit } from '../../utils/api'
 import { defineProps, defineModel } from 'vue'
-const emit = defineEmits(['updateTableData'])
+const emit = defineEmits(['fetTableData'])
 const open = defineModel('open')
 const props = defineProps({
   modalEdit: Object
 })
 import { watchEffect } from 'vue'
-
+const modalForm = ref<ModalForm>({
+  uuid: '',
+  bot_info: '1111',
+  bot_name: '222',
+  user_info: '',
+  user_name: ''
+})
 watchEffect(() => {
-  console.log(props.modalEdit?.uuid || 'uuid')
   if (props.modalEdit?.uuid !== '' && props.modalEdit?.uuid !== undefined) {
-    // console.log('编辑')
-    for (let key in modalForm.value) {
-      modalForm.value[key] = props.modalEdit[key] || ''
-    }
+    modalForm.value = props.modalEdit
   } else {
     console.log('新增')
   }
@@ -43,13 +45,6 @@ interface ModalForm {
   user_info: string
   user_name: string
 }
-const modalForm = ref<ModalForm>({
-  uuid: '',
-  bot_info: '1111',
-  bot_name: '222',
-  user_info: '',
-  user_name: ''
-})
 
 const items = [
   { name: 'bot_info', placeHolder: 'bot_info' },
@@ -64,6 +59,6 @@ const handleOk = async () => {
     await agentAdd(modalForm.value)
   }
   open.value = false
-  emit('updateTableData')
+  emit('fetTableData')
 }
 </script>

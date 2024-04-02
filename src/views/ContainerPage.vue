@@ -27,8 +27,14 @@
         </a-col>
       </a-row>
     </a-form>
-    <InteTable :tableData="tableData" :loading="loading" @updateTableData="fetchData" />
-    <AddModal v-model:open="openModal" @updateTableData="fetchData" />
+    <InteTable
+      :tableData="tableData"
+      :loading="loading"
+      @fetTableData="fetchData"
+      v-model:modalEdit="modalEdit"
+      v-model:openModal="openModal"
+    />
+    <AddModal v-model:open="openModal" @fetTableData="fetchData" :modal-edit="modalEdit" />
   </div>
 </template>
 <!-- v-model:open="open"
@@ -43,6 +49,13 @@ interface FormState {
   id: string
   name: string
 }
+const modalEdit = ref({
+  uuid: '',
+  bot_info: '',
+  bot_name: '',
+  user_info: '',
+  user_name: ''
+})
 const openModal = ref<boolean>(false)
 const loading = ref(false)
 const formState: UnwrapRef<FormState> = reactive({
