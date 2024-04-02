@@ -19,14 +19,18 @@
       >
         <!-- :before-upload="beforeUpload" -->
 
-        <a-image :width="80" v-if="modalEdit?.img_url" :src="modalEdit?.img_url" alt="avatar" />
+        <a-image
+          :width="80"
+          v-if="modalForm?.img_url"
+          :src="modalForm?.img_url"
+          alt="avatar"
+          style="border-radius: 50%"
+        />
         <div v-else>
-          <loading-outlined v-if="loading"></loading-outlined>
-          <plus-outlined v-else></plus-outlined>
-          <div class="ant-upload-text">Upload</div>
+          <div class="ant-upload-text">上传头像</div>
         </div>
       </a-upload>
-      <a-form-item v-for="item in items" :label="item.name" :key="item.name">
+      <a-form-item v-for="item in items" :label="item.placeHolder" :key="item.name">
         <a-input :placeholder="item.placeHolder" v-model:value="modalForm[item.name]"></a-input>
       </a-form-item>
     </a-form>
@@ -48,36 +52,25 @@ interface ModalForm {
 const emit = defineEmits(['fetTableData'])
 const open = defineModel('open')
 const modalEdit = defineModel('modalEdit')
-console.log('%c Line:51 🍕 modalEdit', 'color:#fca650', { ...modalEdit.value })
 const items = [
-  { name: 'bot_info', placeHolder: 'bot_info' },
-  { name: 'bot_name', placeHolder: 'bot_name' },
-  { name: 'user_info', placeHolder: 'user_info' },
-  { name: 'user_name', placeHolder: 'user_name' }
+  { name: 'bot_name', placeHolder: '智能体名称' },
+  { name: 'bot_info', placeHolder: '智能体简介' },
+  { name: 'user_name', placeHolder: '用户名称' },
+  { name: 'user_info', placeHolder: '用户信息' }
 ]
 const fileList = ref([])
-const loading = ref<boolean>(false)
-const handleChange = (info: UploadChangeParam) => {
-  modalEdit.value = { ...modalEdit.value, img_url: info.file.response }
-  if (info.file.status === 'uploading') {
-    loading.value = true
-    return
-  }
-  if (info.file.status === 'done') {
-    loading.value = false
-  }
-  if (info.file.status === 'error') {
-    loading.value = false
-  }
-}
 const modalForm = ref<ModalForm>({
   uuid: '',
-  bot_info: '1111',
-  bot_name: '222',
+  bot_info: '',
+  bot_name: '',
   user_info: '',
   user_name: '',
   img_url: ''
 })
+const handleChange = (info: UploadChangeParam) => {
+  modalForm.value = { ...modalForm.value, img_url: info.file.response }
+}
+
 const isEdit = computed(() => {
   return modalEdit.value?.uuid !== '' && modalEdit.value?.uuid !== undefined
 })

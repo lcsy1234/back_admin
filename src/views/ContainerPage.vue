@@ -64,6 +64,13 @@ const formRef = ref()
 const tableData = ref([])
 
 const addClick = () => {
+  modalEdit.value = {
+    uuid: '',
+    bot_info: '',
+    bot_name: '',
+    user_info: '',
+    user_name: ''
+  }
   openModal.value = true
 }
 
