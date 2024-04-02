@@ -34,11 +34,9 @@
       v-model:modalEdit="modalEdit"
       v-model:openModal="openModal"
     />
-    <AddModal v-model:open="openModal" @fetTableData="fetchData" :modal-edit="modalEdit" />
+    <AddModal v-model:open="openModal" @fetTableData="fetchData" v-model:modalEdit="modalEdit" />
   </div>
 </template>
-<!-- v-model:open="open"
-      v-model:modalForm="modalForm" -->
 <script lang="ts" setup>
 import { agentSearch, agentAdd } from '../utils/api'
 import { onMounted, reactive, ref } from 'vue'
@@ -72,15 +70,11 @@ const addClick = () => {
 const fetchData = async () => {
   loading.value = true
   const res = await agentSearch({ bot_name: formState.name, _id: formState.id })
-  console.log('%c Line:90 🍩 res', 'color:#465975', res)
   const AddIdRes = res.data.aiList.map((item: any, index: number) => {
     item.id = index + 1
     return item
   })
   AddIdRes.sort((a: any, b: any) => a.id - b.id)
-
-  // console.log('%c Line:92 🥕 AddIdRes', 'color:#42b983', AddIdRes)
-
   tableData.value = AddIdRes
   loading.value = false
 }
@@ -95,6 +89,7 @@ onMounted(async () => {
 <style scoped>
 .container {
   width: 100%;
+  padding: 30px 16px;
 }
 .search-form {
   width: 100%;
