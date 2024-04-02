@@ -1,28 +1,14 @@
 <template>
-  <a-modal
-    v-model:open="open"
-    width="1000px"
-    title="新增人物设定"
-    ok-text="确认"
-    cancel-text="取消"
-    @ok="handleOk"
-  >
-    <a-form>
-      <a-form-item v-for="item in items" :label="item.name" :key="item.name">
-        <a-input :placeholder="item.placeHolder" v-model:value="modalForm[item.name]"></a-input>
-      </a-form-item>
-    </a-form>
-  </a-modal>
   <div class="container">
-    <a-form class="search-form" :model="formState">
+    <a-form class="search-form" :model="formState" ref="formRef">
       <a-row :gutter="[16, 16]">
         <a-col :span="8">
-          <a-form-item class="form-id">
+          <a-form-item class="form-id" name="id">
             <a-input v-model:value="formState.id" placeholder="智能体ID" class="form-id"> </a-input>
           </a-form-item>
         </a-col>
         <a-col :span="8">
-          <a-form-item class="form-id">
+          <a-form-item class="form-id" name="name">
             <a-input v-model:value="formState.name" placeholder="智能体名称"> </a-input>
           </a-form-item>
         </a-col>
@@ -34,55 +20,60 @@
             <a-button type="primary" html-type="submit" class="button-style" @click="fetchData">
               查询
             </a-button>
-            <a-button type="primary" html-type="submit" class="button-style"> 重置 </a-button>
+            <a-button type="primary" html-type="submit" class="button-style" @click="resetClick">
+              重置
+            </a-button>
           </a-form-item>
         </a-col>
       </a-row>
     </a-form>
-    <InteTable :tableData="tableData" />
+    <InteTable :tableData="tableData" :loading="loading" @updateTableData="fetchData" />
+    <AddModal v-model:open="openModal" @updateTableData="fetchData" />
   </div>
 </template>
+<!-- v-model:open="open"
+      v-model:modalForm="modalForm" -->
 <script lang="ts" setup>
 import { agentSearch, agentAdd } from '../utils/api'
 import { onMounted, reactive, ref } from 'vue'
 import type { UnwrapRef } from 'vue'
-import type { FormProps } from 'ant-design-vue'
 import InteTable from '../components/table/InteTable.vue'
+import AddModal from '@/components/modal/AddModal.vue'
 interface FormState {
   id: string
   name: string
 }
+const openModal = ref<boolean>(false)
+const loading = ref(false)
 const formState: UnwrapRef<FormState> = reactive({
   id: '',
   name: ''
 })
+const formRef = ref()
 const tableData = ref([])
-const modalForm = reactive({
-  bot_info: '1111',
-  bot_name: '222',
-  user_info: '',
-  user_name: ''
-})
-const items = [
-  { name: 'bot_info', placeHolder: 'bot_info' },
-  { name: 'bot_name', placeHolder: 'bot_name' },
-  { name: 'user_info', placeHolder: 'user_info' },
-  { name: 'user_name', placeHolder: 'user_name' }
-]
-const open = ref<boolean>(false)
 
 const addClick = () => {
-  open.value = true
+  openModal.value = true
 }
 
-const handleOk = async (e: MouseEvent) => {
-  const okAdd = await agentAdd(modalForm)
-
-  open.value = false
-}
 const fetchData = async () => {
+  loading.value = true
   const res = await agentSearch({ bot_name: formState.name, _id: formState.id })
-  tableData.value = res.data.aiList
+  console.log('%c Line:90 🍩 res', 'color:#465975', res)
+  const AddIdRes = res.data.aiList.map((item: any, index: number) => {
+    item.id = index + 1
+    return item
+  })
+  AddIdRes.sort((a: any, b: any) => a.id - b.id)
+
+  // console.log('%c Line:92 🥕 AddIdRes', 'color:#42b983', AddIdRes)
+
+  tableData.value = AddIdRes
+  loading.value = false
+}
+const resetClick = () => {
+  formRef.value.resetFields()
+  fetchData()
 }
 onMounted(async () => {
   fetchData()

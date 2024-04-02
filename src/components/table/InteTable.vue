@@ -1,6 +1,6 @@
 <template>
   <div class="contain">
-    <a-table :columns="columns" :data-source="props.tableData">
+    <a-table :columns="columns" :data-source="props.tableData" :loading="props.loading">
       <template #headerCell="{ column }">
         <template v-if="column.key === 'name'"> </template>
       </template>
@@ -24,24 +24,39 @@
         </template>
         <template v-else-if="column.key === 'action'">
           <span>
-            <a>编辑</a>
+            <a @click="editClick(record)">编辑</a>
             <a-divider type="vertical" />
-            <a>删除</a>
+            <a @click="deleteClick(record.uuid)">删除</a>
             <a-divider type="vertical" />
             <a class="ant-dropdown-link"> 对话测试 </a>
           </span>
         </template>
       </template>
     </a-table>
+    <AddModal v-model:open="openModel" :modal-edit="modalEdit" />
   </div>
 </template>
 <script lang="ts" setup>
+import { agentDelete } from '../../utils/api'
+import { defineEmits, ref } from 'vue'
+import AddModal from '../modal/AddModal.vue'
+const emit = defineEmits(['updateTableData'])
 const props = defineProps({
   tableData: {
     type: Array
+  },
+  loading: {
+    type: Boolean
   }
 })
-console.log('%c Line:40 🌶 props', 'color:#42b983', props.tableData)
+const openModel = ref<boolean>(false)
+const modalEdit = ref({
+  uuid: '',
+  bot_info: '',
+  bot_name: '',
+  user_info: '',
+  user_name: ''
+})
 
 const columns = [
   {
@@ -74,37 +89,14 @@ const columns = [
     key: 'action'
   }
 ]
-
-// const data = [
-//   {
-//     id: '1',
-//     bot_info: '修仙界的大能，寡言少语，为人精明，待人友善',
-//     bot_name: '韩立',
-//     user_info: '曲魂是韩立年轻时候的师兄',
-//     user_name: '曲魂'
-//   },
-//   {
-//     id: '1',
-//     bot_info: '修仙界的大能，寡言少语，为人精明，待人友善',
-//     bot_name: '韩立',
-//     user_info: '曲魂是韩立年轻时候的师兄',
-//     user_name: '曲魂'
-//   },
-//   {
-//     id: '1',
-//     bot_info: '修仙界的大能，寡言少语，为人精明，待人友善',
-//     bot_name: '韩立',
-//     user_info: '曲魂是韩立年轻时候的师兄',
-//     user_name: '曲魂'
-//   },
-//   {
-//     id: '1',
-//     bot_info: '修仙界的大能，寡言少语，为人精明，待人友善',
-//     bot_name: '韩立',
-//     user_info: '曲魂是韩立年轻时候的师兄',
-//     user_name: '曲魂'
-//   }
-// ]
+const deleteClick = async (uuid: string) => {
+  await agentDelete({ uuid: uuid })
+  emit('updateTableData')
+}
+const editClick = async (record: any) => {
+  modalEdit.value = record
+  openModel.value = true
+}
 </script>
 <style scoped>
 .contain {
