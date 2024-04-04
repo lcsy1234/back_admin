@@ -1,6 +1,12 @@
 <template>
   <a-layout>
-    <a-layout-header style="background: #fff; padding: 0"></a-layout-header>
+    <!-- <video
+      class="bg-video"
+      src="https://oss.laf.run/frckqy-data/d7cd4008dca2e1d43e8131dd5f7ee43f.mp4"
+      autoplay
+      muted
+      loop
+    ></video> -->
     <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
       <a-menu
         v-model:selectedKeys="state.selectedKeys"
@@ -12,12 +18,14 @@
       >
       </a-menu>
     </a-layout-sider>
-    <router-view></router-view>
+    <div style="background-color: #fff">
+      <router-view></router-view>
+    </div>
   </a-layout>
 </template>
 <script lang="ts" setup>
 import { h, reactive, ref } from 'vue'
-import { MailOutlined, MenuUnfoldOutlined, MenuFoldOutlined } from '@ant-design/icons-vue'
+import { MailOutlined } from '@ant-design/icons-vue'
 import { useRouter } from 'vue-router'
 const router = useRouter()
 const collapsed = ref<boolean>(false)
@@ -52,4 +60,12 @@ const menuClick = () => {
   router.push('/content')
 }
 </script>
-<style lang="scss" scoped></style>
+<style  scoped>
+.bg-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  width: 100vw;
+}
+</style>
