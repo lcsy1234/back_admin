@@ -10,7 +10,7 @@
           <a-input type="password" placeholder="密码" prefix-icon="lock" />
         </a-form-item>
         <a-form-item>
-          <a-button type="primary" html-type="submit" block> 登录 </a-button>
+          <a-button type="primary" html-type="submit" block class="login-button"> 登录 </a-button>
         </a-form-item>
       </a-form>
     </a-card>
@@ -60,7 +60,7 @@ const handleSubmit = async (e) => {
   width: 600px;
   z-index: 1;
   opacity: 0.8;
-  background: rgb(2, 49, 71);
+  background: rgb(76, 69, 100);
   color: white;
 }
 .bg-video {
@@ -69,5 +69,11 @@ const handleSubmit = async (e) => {
   left: 0;
   z-index: 0;
   width: 100vw;
+}
+.login-button {
+  background-color: rgb(128, 76, 53);
+}
+.login-button:hover {
+  background-color: rgb(52, 48, 71);
 }
 </style>

@@ -31,7 +31,12 @@
         </div>
       </a-upload>
       <a-form-item v-for="item in items" :label="item.placeHolder" :key="item.name">
-        <a-input :placeholder="item.placeHolder" v-model:value="modalForm[item.name]"></a-input>
+        <!-- <a-input ></a-input> -->
+        <a-textarea
+          :placeholder="item.placeHolder"
+          v-model:value="modalForm[item.name]"
+          auto-size
+        />
       </a-form-item>
     </a-form>
   </a-modal>

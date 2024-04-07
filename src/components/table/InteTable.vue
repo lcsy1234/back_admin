@@ -1,28 +1,8 @@
 <template>
   <div class="contain">
     <a-table :columns="columns" :data-source="props.tableData" :loading="props.loading">
-      <template #headerCell="{ column }">
-        <template v-if="column.key === 'name'"> </template>
-      </template>
-
       <template #bodyCell="{ column, record }">
-        <template v-if="column.key === 'name'">
-          <a>
-            {{ record.name }}
-          </a>
-        </template>
-        <template v-else-if="column.key === 'tags'">
-          <span>
-            <a-tag
-              v-for="tag in record.tags"
-              :key="tag"
-              :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'"
-            >
-              {{ tag.toUpperCase() }}
-            </a-tag>
-          </span>
-        </template>
-        <template v-else-if="column.key === 'action'">
+        <template v-if="column.key === 'action'">
           <span>
             <a @click="editClick(record)">编辑</a>
             <a-divider type="vertical" />
@@ -36,8 +16,10 @@
   </div>
 </template>
 <script lang="ts" setup>
+import { LineHeightOutlined } from '@ant-design/icons-vue'
 import { agentDelete } from '../../utils/api'
 import { defineEmits, ref } from 'vue'
+import linter from 'ant-design-vue/es/_util/cssinjs/linters/legacyNotSelectorLinter'
 const emit = defineEmits(['fetTableData'])
 const modalEdit = defineModel('modalEdit')
 const openModal = defineModel('openModal')
@@ -64,21 +46,25 @@ const columns = [
   {
     title: '机器人名称',
     dataIndex: 'bot_name',
-    key: 'bot_name'
+    key: 'bot_name',
+    width: 120
   },
   {
     title: '用户设定',
     key: 'user_info',
-    dataIndex: 'user_info'
+    dataIndex: 'user_info',
+    width: 250
   },
   {
     title: '用户名称',
     key: 'user_name',
-    dataIndex: 'user_name'
+    dataIndex: 'user_name',
+    width: 120
   },
   {
     title: 'Action',
-    key: 'action'
+    key: 'action',
+    width: 120
   }
 ]
 const deleteClick = async (uuid: string) => {
